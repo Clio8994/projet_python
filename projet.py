@@ -1,6 +1,5 @@
 #Réalisé par HUCKO Elio & KABORE Adam
 
-
 import os
 import re
 import requests
@@ -10,7 +9,7 @@ import argparse
 
 url = "https://books.toscrape.com/"
 
-def create_output_dirs():
+def create_output_dirs():                       #Création des dossiers de sortie
     OUTPUT_DIR = os.path.join(".", "output")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -22,7 +21,7 @@ def create_output_dirs():
     
     return IMAGES_DIR
 
-def boucle_scrap(categories, cat_name, images_dir):
+def boucle_scrap(categories, cat_name, images_dir): #Boucle de scrap pour chaque catégorie
    for idx, n in enumerate(categories):
     cat = cat_name[idx]
     url_cat = url + n
@@ -74,7 +73,7 @@ def boucle_scrap(categories, cat_name, images_dir):
     csv_path = f"output/csv/{safe_name}.csv"
     df.to_csv(csv_path, index=False, sep=";")
 
-def scrap_all(images_dir):
+def scrap_all(images_dir): #Scrap de toutes les catégories
     response = requests.get(url)
     sel = Selector(text=response.text)
     categories = sel.css("ul.nav li a::attr(href)").getall()[1:]
@@ -83,7 +82,7 @@ def scrap_all(images_dir):
 
     boucle_scrap(categories, cat_name, images_dir)
 
-def scrap_category(category, images_dir):
+def scrap_category(category, images_dir): #Scrap d'une catégorie spécifique
     response = requests.get(url)
     sel = Selector(text=response.text)
     categories = sel.css("ul.nav li a::attr(href)").getall()[1:]
@@ -98,7 +97,7 @@ def scrap_category(category, images_dir):
     boucle_scrap([categories[idx]], [category], images_dir)
 
 
-def main():
+def main(): #Point d'entrée principal du script
     parser = argparse.ArgumentParser(description="scraper livre")
     parser.add_argument("--categories", nargs="+", help="Donner une categorie ou all si vous souhaitez tout scrapper") 
     parser.add_argument("--output", default="output")
